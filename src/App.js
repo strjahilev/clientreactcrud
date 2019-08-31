@@ -1,26 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
+import {getBooks}  from './actions/books'
+import { connect } from 'react-redux'
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends React.Component {
+  addbook(){
 
-export default App;
+    console.log(this.Input.value) ;
+    this.props.onAddBook(this.Input.value);
+    this.Input.value = '';
+  }
+
+  render() {
+    return <div className="App">
+      <h1> list</h1>
+      <input type="text" ref={(input) => { this.Input = input; }} />
+      <button onClick={this.addbook.bind(this)}>BUTTON</button>
+      <ul>{this.props.booksStore.map((books, index) =>
+          <li key={index}>{books}</li>
+      )}
+      </ul>
+    </div>
+
+  }
+}
+export default connect(
+    state => ({
+      booksStore: state
+    }),
+    dispatch => ({
+      onAddBook: (book) => {dispatch(getBooks(book))},
+
+    })
+)(App);
+
+// export default App;
